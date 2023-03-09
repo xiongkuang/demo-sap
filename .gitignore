@@ -33,11 +33,9 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-*.tf
-.terragrunt-cache
 
 .terraform.lock.hcl
-.terragrunt-source-version
+
 
 __pycache__
 
@@ -49,5 +47,3 @@ release/release_vars.yml
 _kafka-topics.yml*
 
 tests_ignore/
-
-demo.tfvars
