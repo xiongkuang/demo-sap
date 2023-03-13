@@ -7,76 +7,45 @@ terraform {
   }
 }
 
-resource "huaweicloud_vpc" "test" {
+resource "huaweicloud_vpc" "sap_demo" {
   name = format("%s-vpc", var.name_prefix)
   cidr = var.vpc_cidr
 }
 
-resource "huaweicloud_vpc_subnet" "test" {
-  vpc_id = huaweicloud_vpc.test.id
+resource "huaweicloud_vpc_subnet" "app" {
+  vpc_id = huaweicloud_vpc.sap_demo.id
 
-  name        = format("%s-subnet", var.name_prefix)
-  cidr        = cidrsubnet(var.vpc_cidr, 4, 1)
-  gateway_ip  = cidrhost(cidrsubnet(var.vpc_cidr, 4, 1), 1)
+  name        = "subnet-app"
+  cidr        = cidrsubnet(var.vpc_cidr, 8, 0)
+  gateway_ip  = cidrhost(cidrsubnet(var.vpc_cidr, 8, 0), 1)
   ipv6_enable = true
 }
 
-#define the security group and the sg rules
-resource "huaweicloud_networking_secgroup" "test" {
-  name                 = format("%s-secgroup", var.name_prefix)
-  delete_default_rules = true
+resource "huaweicloud_vpc_subnet" "heartbeat" {
+  vpc_id = huaweicloud_vpc.sap_demo.id
+
+  name        = "subnet-heartbeat"
+  cidr        = cidrsubnet(var.vpc_cidr, 8, 1)
+  gateway_ip  = cidrhost(cidrsubnet(var.vpc_cidr, 8, 1), 1)
+  ipv6_enable = true
 }
 
-resource "huaweicloud_networking_secgroup_rule" "in_v4_icmp_all" {
-  security_group_id = huaweicloud_networking_secgroup.test.id
-  ethertype         = "IPv4"
-  direction         = "ingress"
-  protocol          = "icmp"
-  remote_ip_prefix  = "0.0.0.0/0"
+resource "huaweicloud_vpc_subnet" "db" {
+  vpc_id = huaweicloud_vpc.sap_demo.id
+
+  name        = "subnet-db"
+  cidr        = cidrsubnet(var.vpc_cidr, 8, 2)
+  gateway_ip  = cidrhost(cidrsubnet(var.vpc_cidr, 8, 2), 1)
+  ipv6_enable = true
 }
 
-resource "huaweicloud_networking_secgroup_rule" "in_v6_icmp_all" {
-  security_group_id = huaweicloud_networking_secgroup.test.id
-  ethertype         = "IPv6"
-  direction         = "ingress"
-  protocol          = "icmp"
-  remote_ip_prefix  = "::/0"
-}
 
-resource "huaweicloud_networking_secgroup_rule" "in_v4_elb_member" {
-  security_group_id = huaweicloud_networking_secgroup.test.id
-  ethertype         = "IPv4"
-  direction         = "ingress"
-  protocol          = "tcp"
-  ports             = "80,8080,8081"
-  remote_ip_prefix  = huaweicloud_vpc.test.cidr
-}
 
-resource "huaweicloud_networking_secgroup_rule" "in_v4_samegroup" {
-  security_group_id = huaweicloud_networking_secgroup.test.id
-  ethertype         = "IPv4"
-  direction         = "ingress"
-  remote_group_id   = huaweicloud_networking_secgroup.test.id
-}
+resource "huaweicloud_vpc_subnet" "dmz" {
+  vpc_id = huaweicloud_vpc.sap_demo.id
 
-resource "huaweicloud_networking_secgroup_rule" "in_v6_samegroup" {
-  security_group_id = huaweicloud_networking_secgroup.test.id
-  ethertype         = "IPv6"
-  direction         = "ingress"
-  remote_group_id   = huaweicloud_networking_secgroup.test.id
+  name        = "subnet-dmz"
+  cidr        = cidrsubnet(var.vpc_cidr, 8, 3)
+  gateway_ip  = cidrhost(cidrsubnet(var.vpc_cidr, 8, 3), 1)
+  ipv6_enable = true
 }
-
-resource "huaweicloud_networking_secgroup_rule" "out_v4_all" {
-  security_group_id = huaweicloud_networking_secgroup.test.id
-  ethertype         = "IPv4"
-  direction         = "egress"
-  remote_ip_prefix  = "0.0.0.0/0"
-}
-
-resource "huaweicloud_networking_secgroup_rule" "out_v6_all" {
-  security_group_id = huaweicloud_networking_secgroup.test.id
-  ethertype         = "IPv6"
-  direction         = "egress"
-  remote_ip_prefix  = "::/0"
-}
-
