@@ -5,3 +5,7 @@ variable "name_prefix" {
 variable "vpc_cidr" {
   description = "The CIDR of the Huaweicloud VPC"
 }
+
+variable "az_name" {
+  description = "The AZ of the Huaweicloud VPC"
+}

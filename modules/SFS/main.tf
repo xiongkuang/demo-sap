@@ -8,7 +8,7 @@ terraform {
 }
 
 resource "huaweicloud_sfs_turbo" "saptrans" {
-  name              = "saptrans"
+  name              = format("%s-saptrans", var.name_prefix)
   size              = 500
   share_proto       = "NFS"
   vpc_id            = var.vpc_id
@@ -18,7 +18,7 @@ resource "huaweicloud_sfs_turbo" "saptrans" {
 }
 
 resource "huaweicloud_sfs_turbo" "sapmnt" {
-  name              = "sapmnt"
+  name              = format("%s-sapmnt", var.name_prefix)
   size              = 500
   share_proto       = "NFS"
   vpc_id            = var.vpc_id
@@ -28,7 +28,7 @@ resource "huaweicloud_sfs_turbo" "sapmnt" {
 }
 
 resource "huaweicloud_sfs_turbo" "hanabackup" {
-  name              = "hanabackup"
+  name              = format("%s-hanabackup", var.name_prefix)
   size              = 500
   share_proto       = "NFS"
   vpc_id            = var.vpc_id

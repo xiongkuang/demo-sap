@@ -3,13 +3,22 @@ output "vpc_id" {
   value       = huaweicloud_vpc.sap_demo.id
 }
 
-# output "subnet_id" {
-#   description = "The UUID of the subnet resource for VPC service within HUAWEI Cloud"
-#   value       = huaweicloud_vpc_subnet.sap_demo.id
-# }
+output "app_subnet_id" {
+  description = "The UUID of the subnet resource for VPC service within HUAWEI Cloud"
+  value       = huaweicloud_vpc_subnet.app.id
+}
 
-# output "ipv4_subnet_id" {
-#   description = "The network ID of the subnet resource for VPC service within HUAWEI Cloud"
-#   value       = huaweicloud_vpc_subnet.sap_demo.ipv4_subnet_id
-# }
+output "heartbeat_subnet_id" {
+  description = "The UUID of the subnet resource for VPC service within HUAWEI Cloud"
+  value       = huaweicloud_vpc_subnet.heartbeat.id
+}
 
+output "db_subnet_id" {
+  description = "The UUID of the subnet resource for VPC service within HUAWEI Cloud"
+  value       = huaweicloud_vpc_subnet.db.id
+}
+
+output "dmz_subnet_id" {
+  description = "The UUID of the subnet resource for VPC service within HUAWEI Cloud"
+  value       = huaweicloud_vpc_subnet.dmz.id
+}

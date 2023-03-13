@@ -20,7 +20,7 @@ variable "secret_key" {
 ################################################################
 ###  Network
 
-variable "network_name_prefix" {
+variable "name_prefix" {
   description = "The name prefix for all VPC resources within HUAWEI Cloud"
 }
 
@@ -50,30 +50,3 @@ variable "ecs_admin_password" {
   description = "The password of ECS instance administrator within HUAWEI Cloud"
 }
 
-################################################################
-###  EIP
-variable "eip_name_prefix" {
-  description = "The name prefix for EIP"
-}
-
-variable "eip_bandwidth" {
-  description = "The EIP bandwidth"
-  default     = 5
-}
-
-variable "eip_charge_mode" {
-  description = "The charge mode of EIP resources:by traffic or by bandwidth"
-  default     = "traffic"
-}
-
-################################################################
-###  LTS
-variable "lts_name_prefix" {
-  description = "The name prefix for LTS resources within HUAWEI Cloud"
-}
-
-################################################################
-###  ELB
-variable "elb_name_prefix" {
-  description = "The name prefix for ELB resources within HUAWEI Cloud"
-}
