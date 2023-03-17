@@ -7,12 +7,10 @@ terraform {
   }
 }
 
-
 data "huaweicloud_images_image" "slesforsap" {
   name        = var.image_name
   visibility  = "private"
   most_recent = true
-
 }
 
 data "huaweicloud_compute_flavors" "saps4app" {
@@ -62,6 +60,11 @@ resource "huaweicloud_compute_instance" "saps4app" {
     uuid        = var.app_subnet_id
     fixed_ip_v4 = cidrhost(var.app_subnet_cidr, count.index + 10)
   }
+
+  network {
+    uuid        = var.heartbeat_subnet_id
+    fixed_ip_v4 = cidrhost(var.heartbeat_subnet_cidr, count.index + 5)
+  }
   #If the user_data field is specified for a Linux ECS that is created using an image
   # with Cloud-Init installed, the admin_pass field becomes invalid.
   # user_data = var.user_data_path
@@ -104,6 +107,11 @@ resource "huaweicloud_compute_instance" "saphana" {
     uuid        = var.db_subnet_id
     fixed_ip_v4 = cidrhost(var.db_subnet_cidr, count.index + 10)
   }
+
+  network {
+    uuid        = var.heartbeat_subnet_id
+    fixed_ip_v4 = cidrhost(var.heartbeat_subnet_cidr, count.index + 3)
+  }
   #If the user_data field is specified for a Linux ECS that is created using an image
   # with Cloud-Init installed, the admin_pass field becomes invalid.
   # user_data = var.user_data_path
@@ -140,3 +148,45 @@ resource "huaweicloud_compute_volume_attach" "attachToDb2" {
 }
 
 
+#append vip to servers
+resource "huaweicloud_networking_vip" "ascsvip" {
+  name = "ascsvip"
+  network_id = var.app_subnet_id
+  ip_address = cidrhost(var.app_subnet_cidr, 12)
+}
+
+resource "huaweicloud_networking_vip" "ersvip" {
+  name = "ersvip"
+  network_id = var.app_subnet_id
+  ip_address = cidrhost(var.app_subnet_cidr, 13)
+}
+
+resource "huaweicloud_networking_vip" "hanavip" {
+  name = "hanavip"
+  network_id = var.db_subnet_id
+  ip_address = cidrhost(var.db_subnet_cidr, 12)
+}
+
+resource "huaweicloud_networking_vip_associate" "associate_ascs_vip" {
+  vip_id   = huaweicloud_networking_vip.ascsvip.id
+  port_ids = [
+    huaweicloud_compute_instance.saps4app[0].network[0].port, 
+    huaweicloud_compute_instance.saps4app[1].network[0].port
+    ]
+}
+
+resource "huaweicloud_networking_vip_associate" "associate_ers_vip" {
+  vip_id   = huaweicloud_networking_vip.ersvip.id
+  port_ids = [
+    huaweicloud_compute_instance.saps4app[0].network[0].port, 
+    huaweicloud_compute_instance.saps4app[1].network[0].port
+    ]
+}
+
+resource "huaweicloud_networking_vip_associate" "associate_hana_vip" {
+  vip_id   = huaweicloud_networking_vip.hanavip.id
+  port_ids = [
+    huaweicloud_compute_instance.saphana[0].network[0].port, 
+    huaweicloud_compute_instance.saphana[1].network[0].port
+    ]
+}

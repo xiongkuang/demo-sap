@@ -39,8 +39,6 @@ resource "huaweicloud_vpc_subnet" "db" {
   ipv6_enable = true
 }
 
-
-
 resource "huaweicloud_vpc_subnet" "dmz" {
   vpc_id = huaweicloud_vpc.sap_demo.id
 

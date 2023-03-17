@@ -103,7 +103,7 @@ resource "huaweicloud_networking_secgroup_rule" "db_out_v4_all" {
 }
 
 resource "huaweicloud_networking_secgroup_rule" "db_out_v6_all" {
-  security_group_id = huaweicloud_networking_secgroup.app.id
+  security_group_id = huaweicloud_networking_secgroup.db.id
   ethertype         = "IPv6"
   direction         = "egress"
   remote_ip_prefix  = "::/0"

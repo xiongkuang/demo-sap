@@ -2,6 +2,10 @@ variable "name_prefix" {
   description = "The name prefix for resources within HUAWEI Cloud"
 }
 
+variable "vpc_id" {
+  description = "The vpc ID of within HUAWEI Cloud"
+}
+
 variable "app_security_group_id" {
   description = "The security group ID for the VPC service within HUAWEI Cloud"
 }

@@ -32,18 +32,9 @@ variable "vpc_cidr" {
 ################################################################
 ###  ECS
 
-variable "instance_count" {
-  description = "The number of ECS instances you want to create"
-  default     = 1
-}
-
 variable "image_name" {
   description = "The name of IMS image within HUAWEI Cloud"
   default     = "Ubuntu 18.04 server 64bit"
-}
-
-variable "ecs_name_prefix" {
-  description = "The name prefix for all ECS resources within HUAWEI Cloud"
 }
 
 variable "ecs_admin_password" {
